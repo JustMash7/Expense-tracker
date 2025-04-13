@@ -18,21 +18,30 @@ function ExpenseForm({ onAddExpense }) {
       alert('Please fill in description and amount.');
       return;
     }
+    if (!['Food', 'Travel', 'Entertainment', 'Utilities'].includes(formData.category)) {
+      alert('Please select a valid category.');
+      return;
+    }
     const amount = parseFloat(formData.amount);
     if (isNaN(amount) || amount <= 0) {
       alert('Please enter a valid amount.');
       return;
     }
-    const newExpense = {
-      id: Date.now(),
-      description: formData.description,
-      amount: amount,
-      category: formData.category,
-    };
-    onAddExpense(newExpense);
-    setFormData({ description: '', amount: '', category: 'Food' });
+    try {
+      const newExpense = {
+        id: Date.now(),
+        description: formData.description.trim(),
+        amount: amount,
+        category: formData.category,
+      };
+      onAddExpense(newExpense);
+      setFormData({ description: '', amount: '', category: 'Food' });
+    } catch (error) {
+      console.error(error);
+      alert('Error adding expense. Please try again.');
+    }
   };
-
+  
   return (
     <form onSubmit={handleSubmit}>
       <input
